@@ -81,7 +81,6 @@ const PostDetail = () => {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    // Simulate API call
     setTimeout(() => {
       const foundPost = posts.find(p => p.id === id);
       if (foundPost) {

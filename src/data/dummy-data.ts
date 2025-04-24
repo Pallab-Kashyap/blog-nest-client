@@ -413,7 +413,7 @@ volumes:
   },
 ];
 
-export const myPosts = [
+export const myPosts: Post[] = [
   posts[0],
   posts[3],
   {
