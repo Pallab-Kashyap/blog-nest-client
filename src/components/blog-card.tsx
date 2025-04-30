@@ -1,4 +1,3 @@
-
 import { Post } from "@/types";
 import { Link } from "react-router-dom";
 import { ArrowUp, BookmarkPlus, BookmarkCheck } from "lucide-react";
@@ -36,16 +35,16 @@ export function BlogCard({ post }: BlogCardProps) {
     <Link to={`/post/${post.id}`} className="group">
       <div className="overflow-hidden rounded-2xl border bg-card hover:shadow-md transition-all duration-300 h-full flex flex-col">
         <div className="relative aspect-[16/9] overflow-hidden">
-          <img 
-            src={post.image} 
+          <img
+            src={post.image}
             alt={post.title}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" 
+            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
           />
         </div>
         <div className="flex flex-col flex-grow p-5">
           <div className="flex items-center gap-2 mb-3">
             <div className="flex items-center space-x-1">
-              <img 
+              <img
                 src={post.author.avatar}
                 alt={post.author.name}
                 className="rounded-full w-6 h-6"
@@ -53,35 +52,39 @@ export function BlogCard({ post }: BlogCardProps) {
               <span className="text-sm font-medium">{post.author.name}</span>
             </div>
             <div className="text-muted-foreground text-xs">•</div>
-            <div className="text-muted-foreground text-xs">{post.readingTime} min read</div>
+            <div className="text-muted-foreground text-xs">
+              {post.readingTime} min read
+            </div>
           </div>
-          
+
           <h3 className="text-lg font-semibold mb-2 line-clamp-2">
             {post.title}
           </h3>
-          
+
           <p className="text-muted-foreground mb-4 text-sm line-clamp-2">
             {post.description}
           </p>
-          
+
           <div className="flex items-center justify-between mt-auto">
-            <div className="flex items-center space-x-3">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full hover:bg-accent"
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                className=" hover:bg-accent"
                 onClick={handleUpvote}
               >
-                <ArrowUp 
-                  className={`h-5 w-5 ${upvoted ? 'text-primary' : 'text-muted-foreground'}`}
+                <ArrowUp
+                  className={`h-5 w-5 ${
+                    upvoted ? "text-primary" : "text-muted-foreground"
+                  }`}
                 />
                 <span className="ml-1 text-sm">{upvotes}</span>
               </Button>
-              
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full hover:bg-accent"
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className=" hover:bg-accent"
                 onClick={handleSave}
               >
                 {saved ? (
@@ -91,9 +94,13 @@ export function BlogCard({ post }: BlogCardProps) {
                 )}
               </Button>
             </div>
-            
+
             <div className="text-xs text-muted-foreground">
-              {new Date(post.createdAt).toLocaleDateString()}
+              {new Date(post.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </div>
           </div>
         </div>

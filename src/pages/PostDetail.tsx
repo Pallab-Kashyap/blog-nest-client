@@ -1,7 +1,14 @@
-
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowUp, BookmarkPlus, BookmarkCheck, Twitter, Linkedin, Github } from "lucide-react";
+import {
+  ArrowUp,
+  BookmarkPlus,
+  BookmarkCheck,
+  Twitter,
+  Linkedin,
+  Github,
+} from "lucide-react";
+import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { posts } from "@/data/dummy-data";
 import { Post, Comment } from "@/types";
 import { Navbar } from "@/components/navbar";
@@ -9,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
-// Simple Markdown renderer component 
+// Simple Markdown renderer component
 function MarkdownContent({ content }: { content: string }) {
   // This is a very simple markdown renderer
   // In a real application, you'd use a library like react-markdown
@@ -19,13 +26,19 @@ function MarkdownContent({ content }: { content: string }) {
     .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-semibold my-3">$1</h2>')
     .replace(/^### (.+)$/gm, '<h3 class="text-xl font-semibold my-2">$1</h3>')
     // Code blocks
-    .replace(/```([^`]+)```/g, '<pre class="bg-muted p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre>')
+    .replace(
+      /```([^`]+)```/g,
+      '<pre class="bg-muted p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre>'
+    )
     // Inline code
-    .replace(/`([^`]+)`/g, '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>')
+    .replace(
+      /`([^`]+)`/g,
+      '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>'
+    )
     // Paragraphs
     .replace(/^(?!<h|<pre|<ul|<ol)(.+)$/gm, '<p class="my-2">$1</p>')
     // New lines
-    .replace(/\n\n/g, '<br/>');
+    .replace(/\n\n/g, "<br/>");
 
   return <div dangerouslySetInnerHTML={{ __html: processedContent }} />;
 }
@@ -57,7 +70,7 @@ function CommentItem({ comment }: { comment: Comment }) {
               Reply
             </Button>
           </div>
-          
+
           {comment.replies && comment.replies.length > 0 && (
             <div className="ml-5 mt-4 border-l-2 pl-4">
               {comment.replies.map((reply) => (
@@ -82,7 +95,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      const foundPost = posts.find(p => p.id === id);
+      const foundPost = posts.find((p) => p.id === id);
       if (foundPost) {
         setPost(foundPost);
         setSaved(foundPost.saved || false);
@@ -138,15 +151,17 @@ const PostDetail = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1">
         <article className="container max-w-4xl py-8">
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
+              {post.title}
+            </h1>
             <div className="flex flex-wrap items-center gap-3 text-sm mb-4">
               <div className="flex items-center gap-2">
-                <img 
+                <img
                   src={post.author.avatar}
                   alt={post.author.name}
                   className="rounded-full w-8 h-8"
@@ -154,29 +169,66 @@ const PostDetail = () => {
                 <span className="font-medium">{post.author.name}</span>
               </div>
               <div className="text-muted-foreground">•</div>
-              <div className="text-muted-foreground">{post.readingTime} min read</div>
+              <div className="text-muted-foreground">
+                {post.readingTime} min read
+              </div>
               <div className="text-muted-foreground">•</div>
               <div className="text-muted-foreground">
-                {new Date(post.createdAt).toLocaleDateString()}
+                {new Date(post.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </div>
             </div>
             <p className="text-lg text-muted-foreground">{post.description}</p>
           </header>
-          
+
           {/* Featured Image */}
           <div className="mb-8 rounded-2xl overflow-hidden">
-            <img 
+            <img
               src={post.image}
               alt={post.title}
               className="w-full h-auto object-cover"
             />
           </div>
-          
+
           {/* Content */}
-          <div className="prose dark:prose-invert max-w-none mb-10">
+          <div className="prose dark:prose-invert max-w-none mb-10 flex gap-4">
+            <div className="sticky top-24 hidden h-fit flex-col items-center gap-4 md:flex">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full hover:bg-accent"
+                onClick={handleUpvote}
+              >
+                <ArrowUp
+                  className={`h-5 w-5 ${
+                    upvoted ? "text-primary" : "text-muted-foreground"
+                  }`}
+                />
+              </Button>
+
+              <span className="ml-1 text-sm">{upvotes}</span>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full hover:bg-accent"
+                onClick={handleSave}
+              >
+                {saved ? (
+                  <FaBookmark className="h-5 w-5 text-primary" />
+                ) : (
+                  <FaRegBookmark className="h-5 w-5 text-muted-foreground" />
+                )}
+              </Button>
+
+
+            </div>
             <MarkdownContent content={post.content} />
           </div>
-          
+
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">
@@ -190,20 +242,22 @@ const PostDetail = () => {
               ))}
             </div>
           )}
-          
+
           {/* Interaction buttons */}
           <div className="flex items-center justify-between py-6">
             <div className="flex items-center gap-4">
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleUpvote}
                 className="flex items-center gap-2"
               >
-                <ArrowUp className={`h-5 w-5 ${upvoted ? 'text-primary' : ''}`} />
+                <ArrowUp
+                  className={`h-5 w-5 ${upvoted ? "text-primary" : ""}`}
+                />
                 <span>{upvotes}</span>
               </Button>
-              
-              <Button 
+
+              <Button
                 variant="outline"
                 onClick={handleSave}
                 className="flex items-center gap-2"
@@ -222,12 +276,12 @@ const PostDetail = () => {
               </Button>
             </div>
           </div>
-          
+
           <Separator className="my-8" />
-          
+
           {/* Author section */}
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-center p-6 rounded-2xl bg-muted/40 mb-10">
-            <img 
+            <img
               src={post.author.avatar}
               alt={post.author.name}
               className="rounded-full w-16 h-16"
@@ -240,9 +294,9 @@ const PostDetail = () => {
               {post.author.socialLinks && (
                 <div className="flex items-center gap-3">
                   {post.author.socialLinks.twitter && (
-                    <a 
-                      href={post.author.socialLinks.twitter} 
-                      target="_blank" 
+                    <a
+                      href={post.author.socialLinks.twitter}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-primary"
                     >
@@ -250,9 +304,9 @@ const PostDetail = () => {
                     </a>
                   )}
                   {post.author.socialLinks.linkedin && (
-                    <a 
-                      href={post.author.socialLinks.linkedin} 
-                      target="_blank" 
+                    <a
+                      href={post.author.socialLinks.linkedin}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-primary"
                     >
@@ -260,9 +314,9 @@ const PostDetail = () => {
                     </a>
                   )}
                   {post.author.socialLinks.github && (
-                    <a 
-                      href={post.author.socialLinks.github} 
-                      target="_blank" 
+                    <a
+                      href={post.author.socialLinks.github}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-primary"
                     >
@@ -273,16 +327,16 @@ const PostDetail = () => {
               )}
             </div>
           </div>
-          
+
           {/* Comments section */}
           <section id="comments">
             <h2 className="text-xl font-semibold mb-6">
               Comments ({post.comments.length})
             </h2>
-            
+
             {/* New comment form */}
             <form onSubmit={handleSubmitComment} className="mb-8">
-              <Textarea 
+              <Textarea
                 placeholder="Write a comment..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
@@ -295,7 +349,7 @@ const PostDetail = () => {
                 </Button>
               </div>
             </form>
-            
+
             {/* Comment list */}
             <div className="space-y-6">
               {post.comments.map((comment) => (

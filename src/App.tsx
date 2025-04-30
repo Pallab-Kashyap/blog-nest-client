@@ -10,6 +10,8 @@ import PostDetail from "./pages/PostDetail";
 import MyPosts from "./pages/MyPosts";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/register" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/post/:id" element={<PostDetail />} />
             <Route path="/my-posts" element={<MyPosts />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
